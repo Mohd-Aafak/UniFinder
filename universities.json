@@ -29,5 +29,48 @@
     "country": "United States",
     "state-province": "Massachusetts",
     "web_pages": ["https://www.harvard.edu/"]
-  }
+  },
+{
+  "name": "University of Toronto",
+  "country": "Canada",
+  "state-province": "Ontario",
+  "web_pages": ["https://www.utoronto.ca/"]
+},
+{
+  "name": "University of Melbourne",
+  "country": "Australia",
+  "state-province": "Victoria",
+  "web_pages": ["https://www.unimelb.edu.au/"]
+},
+{
+  "name": "National University of Singapore",
+  "country": "Singapore",
+  "state-province": null,
+  "web_pages": ["https://www.nus.edu.sg/"]
+},
+{
+  "name": "University of Tokyo",
+  "country": "Japan",
+  "state-province": "Tokyo",
+  "web_pages": ["https://www.u-tokyo.ac.jp/en/"]
+},
+{
+  "name": "ETH Zurich",
+  "country": "Switzerland",
+  "state-province": "Zurich",
+  "web_pages": ["https://ethz.ch/en.html"]
+},
+{
+  "name": "University of Cape Town",
+  "country": "South Africa",
+  "state-province": "Western Cape",
+  "web_pages": ["https://www.uct.ac.za/"]
+},
+{
+  "name": "Tsinghua University",
+  "country": "China",
+  "state-province": "Beijing",
+  "web_pages": ["https://www.tsinghua.edu.cn/en/"]
+}
 ]
+
