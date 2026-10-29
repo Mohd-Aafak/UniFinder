@@ -1,6 +1,6 @@
 
 
-let url = "https://universities.hipolabs.com/search?country=";
+let url = "./universities.json";
 
 let list = document.getElementById("universities-list");
 let result = document.getElementById("result-count");
@@ -105,49 +105,48 @@ function displayUniversities(universities) {
 }
 
 // Search universities using country filter
-btn.addEventListener("click", async () => {
-    let country = document.getElementById("country-filter").value;
-    let url2 = "";
 
-    if (country === "") {
-        url2 = "https://universities.hipolabs.com/search";
-    } else {
-        url2 = `${url}${encodeURIComponent(country)}`;
-    }
+btn.addEventListener("click", async () => {
+    let country = countryFilter.value;
 
     try {
         loading.classList.remove("hidden");
 
-        let res = await fetch(url2);
+        let res = await fetch(url);
 
         if (!res.ok) {
-            throw new Error("Failed to fetch university data");
+            throw new Error("Failed to load university data");
         }
 
         let data = await res.json();
-
         allUniversities = data;
 
-        // Show results matching the current search text
         let input = searchInput.value.trim().toLowerCase();
 
         let filteredUniversities = allUniversities.filter((university) => {
-            return university.name.toLowerCase().includes(input);
+            let matchesName = university.name
+                .toLowerCase()
+                .includes(input);
+
+            let matchesCountry = country === "" ||
+                university.country === country;
+
+            return matchesName && matchesCountry;
         });
 
         displayUniversities(filteredUniversities);
-        loading.classList.add("hidden");
-
     } catch (error) {
         console.error("University data not found:", error);
+
         result.textContent = "";
         list.innerHTML = "";
 
-let errorMessage = document.createElement("p");
-errorMessage.textContent =
-    "Unable to load universities.  Please Check your connection and try again.";
+        let errorMessage = document.createElement("p");
+        errorMessage.textContent =
+            "Unable to load universities. Please try again.";
 
-list.appendChild(errorMessage);
+        list.appendChild(errorMessage);
+    } finally {
         loading.classList.add("hidden");
     }
 });
