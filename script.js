@@ -110,7 +110,7 @@ btn.addEventListener("click", async () => {
     let url2 = "";
 
     if (country === "") {
-        url2 = "http://universities.hipolabs.com/search";
+        url2 = "https://universities.hipolabs.com/search";
     } else {
         url2 = `${url}${encodeURIComponent(country)}`;
     }
