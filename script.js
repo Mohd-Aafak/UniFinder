@@ -14,6 +14,7 @@ let themeToggle = document.getElementById("theme-toggle");
 
 let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 let allUniversities = [];
+populateCountryDropdown(allUniversities);
 
 // Display university cards
 function displayUniversities(universities) {
@@ -29,6 +30,24 @@ function displayUniversities(universities) {
          list.appendChild(message);
          return;
     }
+    
+function populateCountryDropdown(universities) {
+    let countries = [
+        ...new Set(universities.map((university) => university.country))
+    ];
+
+    countries.sort();
+
+    countryFilter.innerHTML = '<option value="">All Countries</option>';
+
+    countries.forEach((country) => {
+        let option = document.createElement("option");
+        option.value = country;
+        option.textContent = country;
+        countryFilter.appendChild(option);
+    });
+}
+
     universities.sort((a, b) => {
     if (sortFilter.value === "za") {
         return b.name.localeCompare(a.name);
