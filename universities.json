@@ -1,0 +1,33 @@
+
+[
+  {
+    "name": "University of Delhi",
+    "country": "India",
+    "state-province": "Delhi",
+    "web_pages": ["https://www.du.ac.in/"]
+  },
+  {
+    "name": "University of Mumbai",
+    "country": "India",
+    "state-province": "Maharashtra",
+    "web_pages": ["https://mu.ac.in/"]
+  },
+  {
+    "name": "University of Calcutta",
+    "country": "India",
+    "state-province": "West Bengal",
+    "web_pages": ["https://www.caluniv.ac.in/"]
+  },
+  {
+    "name": "University of Oxford",
+    "country": "United Kingdom",
+    "state-province": "England",
+    "web_pages": ["https://www.ox.ac.uk/"]
+  },
+  {
+    "name": "Harvard University",
+    "country": "United States",
+    "state-province": "Massachusetts",
+    "web_pages": ["https://www.harvard.edu/"]
+  }
+]
