@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+        content="UniFinder helps you explore universities, search by country, and save your favorite universities.">
+
+    <meta name="theme-color" content="#10091F">
+
+    <title>UniFinder | Find Your Perfect University</title>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <header>
+        <nav class="navbar">
+
+            <a href="#home" class="logo-link">
+                <h2 id="logo">UniFinder<span>.</span></h2>
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#universities">Universities</a></li>
+                <li><a href="#fav">Favorites</a></li>
+            </ul>
+
+            <button id="theme-toggle" type="button">
+                🌙 Dark Mode
+            </button>
+
+        </nav>
+    </header>
+
+
+    <!-- Main Content -->
+    <main class="container">
+
+        <!-- Hero / Search Section -->
+        <section id="home" class="hero hero-section">
+
+            <p class="hero-badge">YOUR FUTURE STARTS HERE</p>
+
+            <h1>
+                Find Your <span>Perfect University</span>
+            </h1>
+
+            <p id="para">
+                Explore universities around the world and find
+                the right place for your future.
+            </p>
+
+            <!-- Search Controls -->
+            <div class="search-container">
+
+                <input
+                    type="text"
+                    id="university-search"
+                    placeholder="Search university name..."
+                    aria-label="Search university by name"
+                >
+
+                <select
+                    id="country-filter"
+                    aria-label="Select a country"
+                >
+                    <option value="">All Countries</option>
+                    <option value="India">India</option>
+                    <option value="Nepal">Nepal</option>
+                    <option value="United States">United States</option>
+                    <option value="United Kingdom">United Kingdom</option>
+                </select>
+
+                <button id="search-btn" type="button">
+                    Search
+                </button>
+
+                <button id="clear-search" type="button">
+                    Clear Search
+                </button>
+
+            </div>
+
+            <!-- Sorting -->
+            <div class="sort-container">
+
+                <label for="sort-filter">Sort universities:</label>
+
+                <select id="sort-filter">
+                    <option value="az">A–Z</option>
+                    <option value="za">Z–A</option>
+                </select>
+
+            </div>
+
+        </section>
+
+
+        <!-- Universities Section -->
+        <section id="universities" class="universities-section">
+
+            <div class="section-heading">
+                <p class="section-badge">DISCOVER</p>
+                <h2>Explore Universities</h2>
+                <p>Discover universities and explore their official websites.</p>
+            </div>
+
+            <p id="result-count" aria-live="polite"></p>
+
+            <div
+                id="loading"
+                class="loading hidden"
+                role="status"
+                aria-live="polite"
+            >
+                Loading universities...
+            </div>
+
+            <div
+                id="universities-list"
+                class="universities-list"
+            >
+                <!-- University cards are added by JavaScript -->
+            </div>
+
+        </section>
+
+
+        <!-- Favorites Section -->
+        <section id="fav" class="favorites-section">
+
+            <div class="section-heading">
+                <p class="section-badge">YOUR COLLECTION</p>
+                <h2>Your Favorite Universities</h2>
+                <p>Keep your preferred universities in one place.</p>
+            </div>
+
+            <p id="favorites-count">Favorites: 0</p>
+
+            <div id="favorites-list">
+                <!-- Favorite cards are added by JavaScript -->
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Made with 💜 using HTML, CSS and JavaScript</p>
+        <p>© 2026 UniFinder</p>
+    </footer>
+
+</body>
+</html>
