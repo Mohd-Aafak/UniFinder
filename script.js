@@ -1,6 +1,4 @@
 
-
-
 const url = "./universities.json";
 
 // HTML elements
@@ -20,24 +18,41 @@ const favCount = document.getElementById("favorites-count");
 let allUniversities = [];
 let favorites = [];
 
+// Load saved favorites safely
 try {
-    favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-    if (!Array.isArray(favorites)) {
-        favorites = [];
+    const savedFavorites = JSON.parse(
+        localStorage.getItem("favorites")
+    );
+
+    if (Array.isArray(savedFavorites)) {
+        favorites = savedFavorites.filter(
+            (university) =>
+                university &&
+                typeof university.name === "string" &&
+                typeof university.country === "string"
+        );
     }
 } catch (error) {
     favorites = [];
 }
 
-// Check whether a university is already a favorite
+// Check if university is already a favorite
 function isFavorite(university) {
-    return favorites.some((fav) => {
-        return fav.name === university.name &&
-               fav.country === university.country;
-    });
+    return favorites.some((fav) =>
+        fav.name === university.name &&
+        fav.country === university.country
+    );
 }
 
-// Populate countries automatically from JSON
+// Save favorites to localStorage
+function saveFavorites() {
+    localStorage.setItem(
+        "favorites",
+        JSON.stringify(favorites)
+    );
+}
+
+// Populate country dropdown from JSON
 function populateCountryDropdown(universities) {
     const selectedCountry = countryFilter.value;
 
@@ -63,13 +78,12 @@ function populateCountryDropdown(universities) {
         countryFilter.appendChild(option);
     });
 
-    // Keep the selected country if it still exists
     if (countries.includes(selectedCountry)) {
         countryFilter.value = selectedCountry;
     }
 }
 
-// Get universities matching search, country and sorting
+// Filter and sort universities
 function getFilteredUniversities() {
     const searchText = searchInput.value.trim().toLowerCase();
     const selectedCountry = countryFilter.value;
@@ -78,6 +92,7 @@ function getFilteredUniversities() {
         const name = (university.name || "").toLowerCase();
 
         const matchesName = name.includes(searchText);
+
         const matchesCountry =
             selectedCountry === "" ||
             university.country === selectedCountry;
@@ -89,51 +104,53 @@ function getFilteredUniversities() {
         const nameA = a.name || "";
         const nameB = b.name || "";
 
-        if (sortFilter.value === "za") {
-            return nameB.localeCompare(nameA);
-        }
-
-        return nameA.localeCompare(nameB);
+        return sortFilter.value === "za"
+            ? nameB.localeCompare(nameA)
+            : nameA.localeCompare(nameB);
     });
 
     return filtered;
 }
 
-// Create a university card
+// Create university card
 function createUniversityCard(university, isFavSection = false) {
-    const div = document.createElement("div");
-    div.classList.add("university-card");
+    const card = document.createElement("div");
+    card.classList.add("university-card");
 
     const heading = document.createElement("h3");
     heading.textContent = university.name || "Name unavailable";
-    div.appendChild(heading);
+    card.appendChild(heading);
 
     const country = document.createElement("p");
-    country.textContent = university.country || "Country unavailable";
-    div.appendChild(country);
+    country.textContent = `Country: ${
+        university.country || "Not available"
+    }`;
+    card.appendChild(country);
 
     const state = document.createElement("p");
-    state.textContent =
-        university["state-province"] || "State not available";
-    div.appendChild(state);
+    state.textContent = `State: ${
+        university["state-province"] || "Not available"
+    }`;
+    card.appendChild(state);
 
     // University website
-    if (Array.isArray(university.web_pages) &&
-        university.web_pages.length > 0) {
-
+    if (
+        Array.isArray(university.web_pages) &&
+        university.web_pages.length > 0
+    ) {
         const link = document.createElement("a");
         link.href = university.web_pages[0];
         link.textContent = "Visit Website";
         link.target = "_blank";
         link.rel = "noopener noreferrer";
-        div.appendChild(link);
+        card.appendChild(link);
     } else {
         const websiteText = document.createElement("p");
         websiteText.textContent = "Website not available";
-        div.appendChild(websiteText);
+        card.appendChild(websiteText);
     }
 
-    // Favorite button
+    // Favorite / Remove button
     const button = document.createElement("button");
     button.type = "button";
 
@@ -141,16 +158,7 @@ function createUniversityCard(university, isFavSection = false) {
         button.textContent = "Remove from Favorites";
 
         button.addEventListener("click", () => {
-            favorites = favorites.filter((fav) => {
-                return !(
-                    fav.name === university.name &&
-                    fav.country === university.country
-                );
-            });
-
-            saveFavorites();
-            displayFavorites();
-            displayUniversities(getFilteredUniversities());
+            removeFavorite(university);
         });
     } else {
         button.textContent = isFavorite(university)
@@ -159,28 +167,46 @@ function createUniversityCard(university, isFavSection = false) {
 
         button.addEventListener("click", () => {
             if (isFavorite(university)) {
-                favorites = favorites.filter((fav) => {
-                    return !(
-                        fav.name === university.name &&
-                        fav.country === university.country
-                    );
-                });
+                removeFavorite(university);
             } else {
-                favorites.push(university);
+                addFavorite(university);
             }
-
-            saveFavorites();
-            displayFavorites();
-            displayUniversities(getFilteredUniversities());
         });
     }
 
-    div.appendChild(button);
+    card.appendChild(button);
 
-    return div;
+    return card;
 }
 
-// Display universities
+// Add university to favorites
+function addFavorite(university) {
+    if (isFavorite(university)) {
+        return;
+    }
+
+    favorites.push(university);
+
+    saveFavorites();
+    displayFavorites();
+    displayUniversities(getFilteredUniversities());
+}
+
+// Remove university from favorites
+function removeFavorite(university) {
+    favorites = favorites.filter((fav) =>
+        !(
+            fav.name === university.name &&
+            fav.country === university.country
+        )
+    );
+
+    saveFavorites();
+    displayFavorites();
+    displayUniversities(getFilteredUniversities());
+}
+
+// Display search results
 function displayUniversities(universities) {
     list.innerHTML = "";
 
@@ -201,35 +227,37 @@ function displayUniversities(universities) {
     });
 }
 
-// Save favorites to localStorage
-function saveFavorites() {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-}
-
-// Display favorites
+// Display favorite universities under their heading
 function displayFavorites() {
     favList.innerHTML = "";
+
     favCount.textContent = `Favorites: ${favorites.length}`;
 
     if (favorites.length === 0) {
         const message = document.createElement("p");
         message.classList.add("empty-message");
         message.textContent = "No favorites added yet.";
+
         favList.appendChild(message);
         return;
     }
 
     favorites.forEach((university) => {
-        favList.appendChild(createUniversityCard(university, true));
+        const favoriteCard = createUniversityCard(
+            university,
+            true
+        );
+
+        favList.appendChild(favoriteCard);
     });
 }
 
-// Apply current search and filters
+// Update search results
 function updateResults() {
     displayUniversities(getFilteredUniversities());
 }
 
-// Load JSON data once
+// Load university data
 async function loadUniversities() {
     loading.classList.remove("hidden");
     result.textContent = "Loading universities...";
@@ -244,24 +272,24 @@ async function loadUniversities() {
         const data = await response.json();
 
         if (!Array.isArray(data)) {
-            throw new Error("The JSON data must be an array");
+            throw new Error("University data must be an array.");
         }
 
         allUniversities = data;
 
         populateCountryDropdown(allUniversities);
         updateResults();
+        displayFavorites();
     } catch (error) {
-        console.error("University data loading error:", error);
+        console.error("University loading error:", error);
 
         result.textContent = "Unable to load universities.";
-
         list.innerHTML = "";
 
         const message = document.createElement("p");
         message.classList.add("empty-message");
         message.textContent =
-            "Unable to load universities. Please check your connection and try again.";
+            "Unable to load universities. Please check universities.json and try again.";
 
         list.appendChild(message);
     } finally {
@@ -275,17 +303,18 @@ btn.addEventListener("click", updateResults);
 // Search while typing
 searchInput.addEventListener("input", updateResults);
 
-// Filter when country changes
+// Country filter
 countryFilter.addEventListener("change", updateResults);
 
-// Sort when option changes
+// Sorting
 sortFilter.addEventListener("change", updateResults);
 
-// Clear search and country filter
+// Clear filters
 clearBtn.addEventListener("click", () => {
     searchInput.value = "";
     countryFilter.value = "";
     sortFilter.value = "az";
+
     updateResults();
 });
 
@@ -307,7 +336,10 @@ themeToggle.addEventListener("click", () => {
     const isDarkMode =
         document.body.classList.contains("dark-mode");
 
-    localStorage.setItem("theme", isDarkMode ? "dark" : "light");
+    localStorage.setItem(
+        "theme",
+        isDarkMode ? "dark" : "light"
+    );
 
     themeToggle.textContent = isDarkMode
         ? "☀️ Light Mode"
@@ -318,4 +350,5 @@ themeToggle.addEventListener("click", () => {
 displayFavorites();
 loadUniversities();
 
-        
+
+
